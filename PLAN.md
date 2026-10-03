@@ -13,14 +13,14 @@ Full-stack app (C#/.NET backend + React frontend) that lets a user browse 200 in
 ---
 
 ## Phase 0: Setup & Spec Confirmation 
-- [ ] Review provided CSV — confirm columns (date, ticker, price), spot-check a few rows
-- [ ] Scaffold backend: `dotnet new webapi`
-- [ ] Scaffold frontend: Vite + React + TypeScript
-- [ ] Confirm API contract matches spec exactly:
+- [x] Review provided CSV — confirm columns (date, ticker, price), spot-check a few rows
+- [x] Scaffold backend: `dotnet new webapi`
+- [x] Scaffold frontend: Vite + React + TypeScript
+- [x] Confirm API contract matches spec exactly:
   - `GET /api/instruments` → list of 200 tickers
   - `GET /api/prices/{ticker}` → full 30-day series, 404 if unknown
   - `GET /api/prices/{ticker}/stats` → total return %, daily volatility, max drawdown
-- [ ] Set up CORS on backend so local frontend can call it
+- [x] Set up CORS on backend so local frontend can call it
 
 ## Phase 1: Backend (C#)
 - [ ] Load CSV into memory on startup (simple in-memory store/dictionary keyed by ticker)

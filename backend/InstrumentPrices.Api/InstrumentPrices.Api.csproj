@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <!-- Single source of truth for the dataset lives at the repo root; copy it next to the binary. -->
+  <ItemGroup>
+    <None Include="..\..\market_data.csv" Link="Data\market_data.csv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

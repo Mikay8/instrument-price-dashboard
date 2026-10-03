@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstrumentPrices.Api", "InstrumentPrices.Api\InstrumentPrices.Api.csproj", "{2C3752F8-DF06-4F36-95CD-5F67FDFCA318}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstrumentPrices.Tests", "InstrumentPrices.Tests\InstrumentPrices.Tests.csproj", "{2048458D-67C7-4D67-8ED0-0F5B3F786781}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C3752F8-DF06-4F36-95CD-5F67FDFCA318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C3752F8-DF06-4F36-95CD-5F67FDFCA318}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C3752F8-DF06-4F36-95CD-5F67FDFCA318}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C3752F8-DF06-4F36-95CD-5F67FDFCA318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2048458D-67C7-4D67-8ED0-0F5B3F786781}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2048458D-67C7-4D67-8ED0-0F5B3F786781}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2048458D-67C7-4D67-8ED0-0F5B3F786781}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2048458D-67C7-4D67-8ED0-0F5B3F786781}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
