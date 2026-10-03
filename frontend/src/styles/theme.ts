@@ -12,6 +12,7 @@ export const chartTheme = {
   crosshair: token('color-hairline-strong'),
   tooltipBackground: token('color-surface'),
   tooltipBorder: token('color-hairline-strong'),
+  priceTagText: token('color-accent-ink'),
   fontFamily: token('font-mono'),
   fontSize: 11,
   lineWidth: 2,

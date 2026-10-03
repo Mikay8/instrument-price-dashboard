@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import type { CSSProperties, HTMLAttributes } from 'react'
 import { formatPercent, formatPrice } from '../../lib/format'
 import { toneClass } from '../../lib/tone'
 
@@ -21,8 +21,9 @@ interface TickerRowProps {
   compareDisabled: boolean
   onView: (ticker: string) => void
   onToggleCompare: (ticker: string) => void
-  /** Positioning from the virtualized list. */
+  /** Positioning and list semantics from the virtualized list. */
   style?: CSSProperties
+  ariaAttributes?: HTMLAttributes<HTMLDivElement>
 }
 
 export function TickerRow({
@@ -35,11 +36,13 @@ export function TickerRow({
   onView,
   onToggleCompare,
   style,
+  ariaAttributes,
 }: TickerRowProps) {
   const disabled = !selected && compareDisabled
 
   return (
     <div
+      {...ariaAttributes}
       style={{ ...style, height: TICKER_ROW_HEIGHT }}
       className={`${TICKER_ROW_COLUMNS} border-l-2 ${
         selected ? 'border-l-accent bg-accent-soft' : 'border-l-transparent hover:bg-raised'
