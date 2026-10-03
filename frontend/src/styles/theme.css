@@ -1,0 +1,76 @@
+/*
+ * Style config: the single source of truth for the app's look.
+ * Every color, font and shared style lives here as a Tailwind token.
+ * Components use tokens by role (bg-surface, text-ink-muted, text-negative…), never raw hex.
+ * JavaScript (e.g. the chart) reads the same tokens through ./theme.ts.
+ */
+
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+@import "@fontsource/jetbrains-mono/700.css";
+
+/* "static" emits every token as a CSS variable even if no class uses it, so theme.ts can reference them. */
+@theme static {
+  /* ── Typography ─────────────────────────────────────────────── */
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-sans: var(--font-mono);
+
+  /* ── Surfaces ───────────────────────────────────────────────── */
+  --color-canvas: #0b0b0a;          /* page background */
+  --color-surface: #0f0f0e;         /* panels, chart, inputs */
+  --color-raised: #171715;          /* hover rows */
+  --color-hairline: #24241f;        /* borders, gridlines */
+  --color-hairline-strong: #3a3934; /* input borders, dividers that need to read */
+
+  /* ── Ink ────────────────────────────────────────────────────── */
+  --color-ink: #f2f1ec;             /* primary text */
+  --color-ink-secondary: #b8b6ad;   /* prices, secondary values */
+  --color-ink-muted: #7c7a72;       /* labels, captions, axis ticks */
+
+  /* ── Accent (brand, selection, focus, active control) ───────── */
+  --color-accent: #f5b335;
+  --color-accent-ink: #0b0b0a;      /* text on accent background */
+  --color-accent-soft: #1c1910;     /* selected row background */
+
+  /* ── Direction (price change, returns) ──────────────────────── */
+  /* Always paired with a +/− sign, so color is never the only cue. */
+  --color-positive: #4cc38a;
+  --color-negative: #ef7a68;
+  --color-negative-soft: #24130f;
+
+  /*
+   * ── Chart series (max 3 on screen) ──────────────────────────
+   * Validated as a set on --color-surface: lightness band, CVD separation and >= 3:1 contrast
+   * all pass. Series 1 is a deeper amber than --color-accent because the brighter amber is
+   * too light to sit evenly beside the other two lines.
+   */
+  --color-series-1: #c98500;
+  --color-series-2: #3a8ae0;
+  --color-series-3: #c95c9c;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-canvas font-mono text-ink antialiased;
+  }
+
+  ::selection {
+    @apply bg-accent text-accent-ink;
+  }
+}
+
+/* ── Shared text styles ─────────────────────────────────────── */
+
+/* Small uppercase label: column headers, tile labels, captions. */
+@utility label-caps {
+  @apply text-xs font-medium tracking-[0.15em] text-ink-muted uppercase;
+}
+
+/* Keyboard focus ring used by every interactive element. */
+@utility focus-ring {
+  @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+}
