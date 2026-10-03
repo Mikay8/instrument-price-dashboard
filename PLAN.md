@@ -25,13 +25,13 @@ Full-stack app (C#/.NET backend + React frontend) that lets a user browse 200 in
 ## Phase 1: Backend (C#)
 - [x] Load CSV into memory on startup (simple in-memory store/dictionary keyed by ticker)
 - [x] Implement `/api/instruments`
-- [ ] Implement `/api/prices/{ticker}` with 404 handling for unknown ticker
+- [x] Implement `/api/prices/{ticker}` with 404 handling for unknown ticker
 - [ ] Implement stats calculations — **verify math by hand**
   - Total return % = (last price / first price − 1) × 100
   - Daily volatility = stdev of **daily returns** (day-over-day % change), not stdev of raw prices
   - Max drawdown = largest peak-to-trough decline (running max vs. current price), not just max − min
-- [ ] Unit tests (xUnit) on the three stats calculations — this is the correctness-critical part
-- [ ] Input validation on `{ticker}` route param (reject malformed/empty input cleanly)
+- [x] Unit tests (xUnit) on the three stats calculations — this is the correctness-critical part
+- [x] Input validation on `{ticker}` route param (reject malformed/empty input cleanly)
 - [x] **Perf:** compute stats once at CSV load (or memoize per-ticker on first request) — don't recalculate stdev/drawdown on every `/stats` call.
 - [x] **Perf:** don't make `/prices/{ticker}` and `/prices/{ticker}/stats` each re-walk the full series independently if avoidable — share the loaded series.
 
