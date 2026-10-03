@@ -34,9 +34,9 @@ function App() {
   const instruments = useInstruments()
   const tickerData = useTickerData(selectedTicker)
 
-  const visibleTickers = useMemo(
-    () => filterTickers(instruments.tickers ?? [], debouncedQuery),
-    [instruments.tickers, debouncedQuery],
+  const visibleInstruments = useMemo(
+    () => filterTickers(instruments.instruments ?? [], debouncedQuery),
+    [instruments.instruments, debouncedQuery],
   )
   const selectedTickers = useMemo(() => (selectedTicker ? [selectedTicker] : []), [selectedTicker])
 
@@ -46,7 +46,7 @@ function App() {
   const sidebar = (
     <>
       <InstrumentsHeader
-        total={instruments.tickers?.length ?? null}
+        total={instruments.instruments?.length ?? null}
         compareCount={selectedTickers.length}
         maxCompare={MAX_COMPARE}
         query={query}
@@ -61,14 +61,13 @@ function App() {
           message={instruments.error.message}
           onRetry={instruments.retry}
         />
-      ) : visibleTickers.length === 0 ? (
+      ) : visibleInstruments.length === 0 ? (
         <EmptyState title="No matches" hint={`No ticker contains “${debouncedQuery.trim()}”.`} />
       ) : (
         <InstrumentList
-          tickers={visibleTickers}
+          instruments={visibleInstruments}
           selectedTickers={selectedTickers}
           colors={SERIES_COLORS}
-          loaded={tickerData.cache}
           compareDisabled={false}
           onView={setSelectedTicker}
           onToggleCompare={toggleTicker}

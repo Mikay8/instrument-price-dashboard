@@ -14,7 +14,6 @@ interface TickerRowProps {
   selected: boolean
   /** Series color when the ticker is on the chart. */
   color?: string
-  /** Shown once the ticker's prices have been loaded; "—" until then. */
   lastPrice?: number
   changePercent?: number
   /** Disable ticking more when the compare limit is reached. */

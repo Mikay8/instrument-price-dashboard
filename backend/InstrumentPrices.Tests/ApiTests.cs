@@ -14,12 +14,37 @@ public class ApiTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task Instruments_Returns200SortedTickers()
     {
-        var tickers = await GetJson<string[]>("/api/instruments");
+        using var doc = await GetJson<JsonDocument>("/api/instruments");
+        var tickers = doc.RootElement.EnumerateArray().Select(i => i.GetProperty("ticker").GetString()!).ToArray();
 
         Assert.Equal(200, tickers.Length);
         Assert.Equal("TICK0001", tickers[0]);
         Assert.Equal("TICK0200", tickers[^1]);
         Assert.Equal(tickers.OrderBy(t => t, StringComparer.Ordinal), tickers);
+    }
+
+    [Fact]
+    public async Task Instruments_IncludeLastPriceAndTotalReturn()
+    {
+        // Same reference values as the stats test: TICK0001 runs 190.34 -> 172.89.
+        using var doc = await GetJson<JsonDocument>("/api/instruments");
+        var first = doc.RootElement[0];
+
+        Assert.Equal("TICK0001", first.GetProperty("ticker").GetString());
+        Assert.Equal(172.89m, first.GetProperty("lastPrice").GetDecimal());
+        Assert.Equal(-9.1678049806, first.GetProperty("totalReturnPercent").GetDouble(), 6);
+    }
+
+    [Fact]
+    public async Task Instruments_TotalReturnMatchesStatsEndpoint()
+    {
+        using var list = await GetJson<JsonDocument>("/api/instruments");
+        var summary = list.RootElement.EnumerateArray().First(i => i.GetProperty("ticker").GetString() == "TICK0150");
+        using var stats = await GetJson<JsonDocument>("/api/prices/TICK0150/stats");
+
+        Assert.Equal(
+            stats.RootElement.GetProperty("totalReturnPercent").GetDouble(),
+            summary.GetProperty("totalReturnPercent").GetDouble());
     }
 
     [Fact]

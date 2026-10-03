@@ -35,7 +35,7 @@ var app = builder.Build();
 
 // Load the CSV now so a missing or malformed file fails startup instead of the first request.
 var store = app.Services.GetRequiredService<MarketDataStore>();
-app.Logger.LogInformation("Loaded {Count} instruments from market data", store.Tickers.Count);
+app.Logger.LogInformation("Loaded {Count} instruments from market data", store.Summaries.Count);
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,4 +1,4 @@
-import type { InstrumentStats, PriceSeries, ProblemDetails } from '../types/api'
+import type { InstrumentStats, InstrumentSummary, PriceSeries, ProblemDetails } from '../types/api'
 import { API_BASE_URL } from './config'
 
 export class ApiError extends Error {
@@ -30,7 +30,7 @@ async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
 }
 
 export const api = {
-  getInstruments: (signal?: AbortSignal) => getJson<string[]>('/api/instruments', signal),
+  getInstruments: (signal?: AbortSignal) => getJson<InstrumentSummary[]>('/api/instruments', signal),
   getPrices: (ticker: string, signal?: AbortSignal) =>
     getJson<PriceSeries>(`/api/prices/${encodeURIComponent(ticker)}`, signal),
   getStats: (ticker: string, signal?: AbortSignal) =>

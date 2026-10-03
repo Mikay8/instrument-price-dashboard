@@ -3,9 +3,9 @@ using InstrumentPrices.Api.Models;
 namespace InstrumentPrices.Api.Services;
 
 /// <summary>
-/// Immutable in-memory store, built once at startup. Each instrument's stats are computed
-/// here so requests only do a dictionary lookup, and the prices and stats endpoints share
-/// the same loaded series.
+/// Immutable in-memory store, built once at startup. Each instrument's stats and the sorted
+/// summary list are computed here so requests only do a lookup, and the instruments, prices
+/// and stats endpoints all share the same loaded series.
 /// </summary>
 public sealed class MarketDataStore
 {
@@ -20,10 +20,14 @@ public sealed class MarketDataStore
             _instruments[ticker] = new Instrument(ticker, prices, stats);
         }
 
-        Tickers = _instruments.Keys.OrderBy(t => t, StringComparer.Ordinal).ToList();
+        Summaries = _instruments.Values
+            .OrderBy(i => i.Ticker, StringComparer.Ordinal)
+            .Select(i => new InstrumentSummary(i.Ticker, i.Prices[^1].Price, i.Stats.TotalReturnPercent))
+            .ToList();
     }
 
-    public IReadOnlyList<string> Tickers { get; }
+    /// <summary>Every instrument's ticker, last price and total return, sorted by ticker.</summary>
+    public IReadOnlyList<InstrumentSummary> Summaries { get; }
 
     /// <summary>Case-insensitive lookup; the returned instrument carries the canonical ticker.</summary>
     public bool TryGet(string ticker, out Instrument instrument) =>

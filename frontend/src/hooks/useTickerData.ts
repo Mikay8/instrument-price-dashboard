@@ -14,8 +14,8 @@ interface Failure {
 }
 
 /**
- * Loads prices + stats for the selected ticker and caches them by ticker, so switching back is
- * instant and the sidebar can show LAST / 30D for every ticker viewed so far.
+ * Loads prices + stats for the selected ticker and caches them by ticker, so switching back to
+ * a ticker is instant and makes no requests.
  *
  * Changing the ticker aborts the in-flight request, so a slow response for an old ticker can
  * never overwrite the one the user picked last.
@@ -48,8 +48,6 @@ export function useTickerData(ticker: string | null) {
     data: cached,
     error,
     isLoading: ticker !== null && !cached && !error,
-    /** Everything loaded so far, keyed by ticker. */
-    cache,
     retry: () => setAttempt((n) => n + 1),
   }
 }

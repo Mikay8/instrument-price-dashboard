@@ -1,5 +1,12 @@
 // Mirrors the backend response shapes (backend/InstrumentPrices.Api/Models/Responses.cs).
 
+/** One row of GET /api/instruments. */
+export interface InstrumentSummary {
+  ticker: string
+  lastPrice: number
+  totalReturnPercent: number
+}
+
 export interface PricePoint {
   /** ISO date, "yyyy-MM-dd". */
   date: string

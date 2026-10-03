@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api/client'
+import type { InstrumentSummary } from '../types/api'
 
 interface Result {
   attempt: number
-  tickers?: string[]
+  instruments?: InstrumentSummary[]
   error?: Error
 }
 
-/** Fetches the full ticker list once (and again on retry). Search filters it client-side. */
+/** Fetches every instrument's summary once (and again on retry). Search filters it client-side. */
 export function useInstruments() {
   const [attempt, setAttempt] = useState(0)
   const [result, setResult] = useState<Result | null>(null)
@@ -15,7 +16,7 @@ export function useInstruments() {
   useEffect(() => {
     const controller = new AbortController()
     api.getInstruments(controller.signal).then(
-      (tickers) => setResult({ attempt, tickers }),
+      (instruments) => setResult({ attempt, instruments }),
       (error: Error) => {
         if (!controller.signal.aborted) setResult({ attempt, error })
       },
@@ -27,7 +28,7 @@ export function useInstruments() {
   const current = result?.attempt === attempt ? result : null
 
   return {
-    tickers: current?.tickers,
+    instruments: current?.instruments,
     error: current?.error,
     isLoading: current === null,
     retry: () => setAttempt((n) => n + 1),

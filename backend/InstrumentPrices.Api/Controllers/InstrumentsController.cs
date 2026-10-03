@@ -1,3 +1,4 @@
+using InstrumentPrices.Api.Models;
 using InstrumentPrices.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,8 +12,8 @@ public sealed class InstrumentsController : ControllerBase
 
     public InstrumentsController(MarketDataStore store) => _store = store;
 
-    /// <summary>All tickers, sorted alphabetically.</summary>
+    /// <summary>All instruments with last price and total return %, sorted by ticker.</summary>
     [HttpGet]
-    [ProducesResponseType(typeof(IReadOnlyList<string>), StatusCodes.Status200OK)]
-    public ActionResult<IReadOnlyList<string>> GetInstruments() => Ok(_store.Tickers);
+    [ProducesResponseType(typeof(IReadOnlyList<InstrumentSummary>), StatusCodes.Status200OK)]
+    public ActionResult<IReadOnlyList<InstrumentSummary>> GetInstruments() => Ok(_store.Summaries);
 }
