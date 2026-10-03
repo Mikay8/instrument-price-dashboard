@@ -1,11 +1,19 @@
 const MINUS = '−'
 
-const percentFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-const signedPercentFormat = new Intl.NumberFormat('en-US', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-  signDisplay: 'exceptZero',
-})
+const percentFormats = new Map<string, Intl.NumberFormat>()
+function percentFormat(digits: number, signed: boolean): Intl.NumberFormat {
+  const key = `${digits}:${signed}`
+  let format = percentFormats.get(key)
+  if (!format) {
+    format = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+      signDisplay: signed ? 'exceptZero' : 'auto',
+    })
+    percentFormats.set(key, format)
+  }
+  return format
+}
 const priceFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 const shortDateFormat = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
 
@@ -13,8 +21,8 @@ const shortDateFormat = new Intl.DateTimeFormat('en-US', { month: 'short', day: 
 const withMinus = (text: string) => text.replace('-', MINUS)
 
 /** 9.4321 -> "+9.43%", -4.6 -> "−4.60%". Unsigned: 2.28 -> "2.28%". */
-export function formatPercent(value: number, { signed = false } = {}): string {
-  return withMinus((signed ? signedPercentFormat : percentFormat).format(value)) + '%'
+export function formatPercent(value: number, { signed = false, digits = 2 } = {}): string {
+  return withMinus(percentFormat(digits, signed).format(value)) + '%'
 }
 
 export function formatPrice(value: number): string {

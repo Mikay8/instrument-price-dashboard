@@ -13,6 +13,10 @@ describe('formatPercent', () => {
     expect(formatPercent(-4.6, { signed: true })).toBe('−4.60%')
   })
 
+  it('supports fewer decimals for axis ticks', () => {
+    expect(formatPercent(2.5, { signed: true, digits: 1 })).toBe('+2.5%')
+  })
+
   it('shows zero without a sign', () => {
     expect(formatPercent(0, { signed: true })).toBe('0.00%')
   })

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { formatPercent, formatPrice } from '../../lib/format'
 import { toneClass } from '../../lib/tone'
 import { SeriesSwatch } from '../ui/SeriesSwatch'
+import { Skeleton } from '../ui/Skeleton'
 
 export interface ChartSeriesSummary {
   ticker: string
@@ -10,6 +11,7 @@ export interface ChartSeriesSummary {
   /** Last − first, in price units. */
   change?: number
   changePercent?: number
+  isLoading?: boolean
 }
 
 interface ChartHeaderProps {
@@ -20,16 +22,21 @@ interface ChartHeaderProps {
 
 /** Doubles as the chart legend: each entry pairs a series color with its ticker. */
 export function ChartHeader({ series, onRemove, actions }: ChartHeaderProps) {
+  // Smaller type when comparing so 2–3 entries fit on one line.
+  const compact = series.length > 1
   return (
     <div className="flex flex-wrap items-center justify-between gap-4">
-      <ul aria-label="Tickers on chart" className="flex flex-wrap items-center gap-x-10 gap-y-3">
-        {series.map(({ ticker, color, lastPrice, change, changePercent }) => (
+      <ul aria-label="Tickers on chart" className="flex flex-wrap items-center gap-x-8 gap-y-2">
+        {series.map(({ ticker, color, lastPrice, change, changePercent, isLoading }) => (
           <li key={ticker} className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <SeriesSwatch color={color} className="self-center" />
-            <span className="text-4xl leading-none font-bold tracking-wide">{ticker}</span>
-            {lastPrice !== undefined && <span className="text-3xl leading-none text-ink-secondary">{formatPrice(lastPrice)}</span>}
+            <SeriesSwatch color={color} size={compact ? 'sm' : 'md'} className="self-center" />
+            <span className={`${compact ? 'text-lg' : 'text-3xl'} leading-none font-bold tracking-wide`}>{ticker}</span>
+            {lastPrice !== undefined && (
+              <span className={`${compact ? 'text-base' : 'text-2xl'} leading-none text-ink-secondary`}>{formatPrice(lastPrice)}</span>
+            )}
+            {isLoading && <Skeleton className={`${compact ? 'h-4' : 'h-6'} w-20 self-center`} />}
             {change !== undefined && changePercent !== undefined && (
-              <span className={`text-base ${toneClass(change)}`}>
+              <span className={`${compact ? 'text-xs' : 'text-sm'} ${toneClass(change)}`}>
                 {change > 0 ? '+' : ''}
                 {formatPrice(change)} ({formatPercent(changePercent, { signed: true })})
               </span>

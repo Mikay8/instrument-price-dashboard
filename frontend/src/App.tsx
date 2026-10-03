@@ -6,14 +6,18 @@ import { InstrumentList } from './components/instruments/InstrumentList'
 import { InstrumentsHeader } from './components/instruments/InstrumentsHeader'
 import { TickerListSkeleton } from './components/instruments/TickerListSkeleton'
 import { AppShell } from './components/layout/AppShell'
+import { StatsComparison } from './components/stats/StatsComparison'
 import { StatsGrid, StatsGridSkeleton } from './components/stats/StatsGrid'
 import { EmptyState } from './components/ui/EmptyState'
 import { ErrorState } from './components/ui/ErrorState'
 import { useDebouncedValue } from './hooks/useDebouncedValue'
 import { useInstruments } from './hooks/useInstruments'
-import { useTickerData } from './hooks/useTickerData'
+import { useTickersData } from './hooks/useTickersData'
+import { chartModeFor, type ChartSeries } from './lib/chartData'
 import { MAX_COMPARE } from './lib/compare'
 import { filterTickers } from './lib/filterTickers'
+import { formatShortDate } from './lib/format'
+import { remove, toggleCompare, viewOnly, type Selection } from './lib/selection'
 import { SERIES_COLORS } from './styles/theme'
 
 const PriceChart = lazy(() => import('./components/chart/PriceChart'))
@@ -29,25 +33,34 @@ function describeError(error: Error): { title: string; message: string } {
 function App() {
   const [query, setQuery] = useState('')
   const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_MS)
-  const [selectedTicker, setSelectedTicker] = useState<string | null>(null)
+  const [selection, setSelection] = useState<Selection>([])
 
   const instruments = useInstruments()
-  const tickerData = useTickerData(selectedTicker)
+  const tickers = useMemo(() => selection.map((s) => s.ticker), [selection])
+  const { cache, failures, retry } = useTickersData(tickers)
 
   const visibleInstruments = useMemo(
     () => filterTickers(instruments.instruments ?? [], debouncedQuery),
     [instruments.instruments, debouncedQuery],
   )
-  const selectedTickers = useMemo(() => (selectedTicker ? [selectedTicker] : []), [selectedTicker])
 
-  // Multi-select compare comes in the next step; for now ticking a box views that ticker.
-  const toggleTicker = (ticker: string) => setSelectedTicker((current) => (current === ticker ? null : ticker))
+  // Stable between unrelated renders, so the chart only rebuilds its rows when this changes.
+  const chartSeries = useMemo<ChartSeries[]>(
+    () =>
+      selection.flatMap(({ ticker, slot }) =>
+        cache[ticker] ? [{ ticker, color: SERIES_COLORS[slot], prices: cache[ticker].series.prices }] : [],
+      ),
+    [selection, cache],
+  )
+
+  const isPending = (ticker: string) => !cache[ticker] && !failures[ticker]
+  const anyPending = selection.some((s) => isPending(s.ticker))
 
   const sidebar = (
     <>
       <InstrumentsHeader
         total={instruments.instruments?.length ?? null}
-        compareCount={selectedTickers.length}
+        compareCount={selection.length}
         maxCompare={MAX_COMPARE}
         query={query}
         onQueryChange={setQuery}
@@ -66,58 +79,84 @@ function App() {
       ) : (
         <InstrumentList
           instruments={visibleInstruments}
-          selectedTickers={selectedTickers}
+          selection={selection}
           colors={SERIES_COLORS}
-          compareDisabled={false}
-          onView={setSelectedTicker}
-          onToggleCompare={toggleTicker}
+          compareDisabled={selection.length >= MAX_COMPARE}
+          onView={(ticker) => setSelection(viewOnly(ticker))}
+          onToggleCompare={(ticker) => setSelection((current) => toggleCompare(current, ticker, MAX_COMPARE))}
         />
       )}
     </>
   )
 
-  const { data } = tickerData
-  const first = data?.series.prices[0]?.price
-  const last = data?.series.prices.at(-1)?.price
+  const single = selection.length === 1 ? cache[selection[0].ticker] : undefined
+  const firstDate = chartSeries[0]?.prices[0]?.date
 
   return (
     <AppShell sidebar={sidebar}>
-      {selectedTicker === null ? (
+      {selection.length === 0 ? (
         <EmptyState
           className="flex-1"
           title="No instrument selected"
-          hint="Pick a ticker from the list to see its 30-day price chart and stats."
+          hint="Click a ticker to view its 30-day chart and stats. Tick or shift-click up to 3 to compare."
         />
       ) : (
         <>
           <ChartHeader
-            series={[
-              {
-                ticker: data?.series.ticker ?? selectedTicker,
-                color: SERIES_COLORS[0],
+            series={selection.map(({ ticker, slot }) => {
+              const prices = cache[ticker]?.series.prices
+              const first = prices?.[0]?.price
+              const last = prices?.at(-1)?.price
+              return {
+                ticker,
+                color: SERIES_COLORS[slot],
                 lastPrice: last,
                 change: first !== undefined && last !== undefined ? last - first : undefined,
-                changePercent: data?.stats.totalReturnPercent,
-              },
-            ]}
-            onRemove={() => setSelectedTicker(null)}
+                changePercent: cache[ticker]?.stats.totalReturnPercent,
+                isLoading: isPending(ticker),
+              }
+            })}
+            onRemove={(ticker) => setSelection((current) => remove(current, ticker))}
           />
-          {tickerData.error ? (
-            <ErrorState {...describeError(tickerData.error)} onRetry={tickerData.retry} />
-          ) : data ? (
-            <>
-              <Suspense fallback={<ChartSkeleton />}>
-                <ChartFrame>
-                  <PriceChart series={data.series} color={SERIES_COLORS[0]} />
-                </ChartFrame>
-              </Suspense>
-              <StatsGrid stats={data.stats} />
-            </>
+
+          {selection
+            .filter(({ ticker }) => failures[ticker])
+            .map(({ ticker }) => {
+              const { title, message } = describeError(failures[ticker])
+              return <ErrorState key={ticker} title={`${ticker} · ${title}`} message={message} onRetry={() => retry(ticker)} />
+            })}
+
+          {chartSeries.length > 0 ? (
+            <Suspense fallback={<ChartSkeleton />}>
+              <ChartFrame
+                caption={
+                  chartModeFor(chartSeries.length) === 'change' && firstDate
+                    ? `% change since ${formatShortDate(firstDate)}`
+                    : undefined
+                }
+              >
+                <PriceChart series={chartSeries} />
+              </ChartFrame>
+            </Suspense>
           ) : (
-            <>
-              <ChartSkeleton />
-              <StatsGridSkeleton />
-            </>
+            anyPending && <ChartSkeleton />
+          )}
+
+          {selection.length === 1 ? (
+            single ? (
+              <StatsGrid stats={single.stats} />
+            ) : (
+              anyPending && <StatsGridSkeleton />
+            )
+          ) : (
+            <StatsComparison
+              rows={selection.map(({ ticker, slot }) => ({
+                ticker,
+                color: SERIES_COLORS[slot],
+                stats: cache[ticker]?.stats,
+                isLoading: isPending(ticker),
+              }))}
+            />
           )}
         </>
       )}

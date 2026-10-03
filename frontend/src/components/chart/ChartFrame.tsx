@@ -2,12 +2,16 @@ import type { ReactNode } from 'react'
 import { Panel } from '../ui/Panel'
 import { Skeleton } from '../ui/Skeleton'
 
-/** Fixed height includes the x-axis band, so the frame never scrolls internally. */
-export const CHART_HEIGHT = 380
+/**
+ * Plot height including the x-axis band, so the frame never scrolls internally.
+ * Scales with the viewport between 240px and 380px so chart + stats fit on shorter screens.
+ */
+const CHART_HEIGHT = 'clamp(240px, 42vh, 380px)'
 
-export function ChartFrame({ children }: { children: ReactNode }) {
+export function ChartFrame({ children, caption }: { children: ReactNode; caption?: string }) {
   return (
     <Panel className="p-4">
+      {caption && <p className="label-caps mb-3">{caption}</p>}
       <div style={{ height: CHART_HEIGHT }}>{children}</div>
     </Panel>
   )

@@ -1,27 +1,28 @@
 import { List, type RowComponentProps } from 'react-window'
+import type { Selection } from '../../lib/selection'
 import type { InstrumentSummary } from '../../types/api'
 import { TICKER_ROW_HEIGHT, TickerRow } from './TickerRow'
 
 interface RowProps {
   instruments: readonly InstrumentSummary[]
-  selectedTickers: readonly string[]
+  selection: Selection
   colors: readonly string[]
   compareDisabled: boolean
   onView: (ticker: string) => void
   onToggleCompare: (ticker: string) => void
 }
 
-function Row({ index, style, ariaAttributes, instruments, selectedTickers, colors, ...handlers }: RowComponentProps<RowProps>) {
+function Row({ index, style, ariaAttributes, instruments, selection, colors, ...handlers }: RowComponentProps<RowProps>) {
   const { ticker, lastPrice, totalReturnPercent } = instruments[index]
-  const slot = selectedTickers.indexOf(ticker)
+  const selected = selection.find((s) => s.ticker === ticker)
 
   return (
     <TickerRow
       style={style}
       ariaAttributes={ariaAttributes}
       ticker={ticker}
-      selected={slot !== -1}
-      color={slot !== -1 ? colors[slot] : undefined}
+      selected={selected !== undefined}
+      color={selected ? colors[selected.slot] : undefined}
       lastPrice={lastPrice}
       changePercent={totalReturnPercent}
       {...handlers}
