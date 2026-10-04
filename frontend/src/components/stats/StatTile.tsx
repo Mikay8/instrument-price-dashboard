@@ -14,7 +14,7 @@ export function StatTile({ label, value, caption, valueClassName = 'text-ink' }:
   return (
     <div className="flex flex-col gap-3 p-5">
       <h3 className="label-caps">{label}</h3>
-      <p className={`text-5xl leading-none font-bold tracking-tight ${valueClassName}`}>{value}</p>
+      <p className={`text-3xl leading-none font-bold tracking-tight @xl:text-4xl @4xl:text-5xl ${valueClassName}`}>{value}</p>
       <p className="label-caps">{caption}</p>
     </div>
   )
@@ -24,7 +24,7 @@ export function StatTileSkeleton({ label }: { label: ReactNode }) {
   return (
     <div className="flex flex-col gap-3 p-5">
       <h3 className="label-caps">{label}</h3>
-      <Skeleton className="h-12 w-40" />
+      <Skeleton className="h-9 w-32 @4xl:h-12 @4xl:w-40" />
       <Skeleton className="h-3 w-48" />
     </div>
   )

@@ -56,11 +56,19 @@ export function TickerRow({
           aria-label={`Compare ${ticker}`}
           className="peer sr-only"
         />
+        {/* Visual checkbox: fills with the ticker's series color when checked. */}
         <span
           aria-hidden="true"
-          className="text-ink-muted peer-focus-visible:outline-2 peer-focus-visible:outline-accent"
+          style={selected ? { backgroundColor: color, borderColor: color } : undefined}
+          className={`flex size-[18px] items-center justify-center rounded-[4px] border-2 transition-colors peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
+            selected ? '' : 'border-ink-muted hover:border-ink'
+          }`}
         >
-          [<span className="inline-block w-[1ch] text-center" style={{ color }}>{selected ? 'x' : ' '}</span>]
+          {selected && (
+            <svg viewBox="0 0 16 16" className="size-3.5 text-accent-ink">
+              <path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
         </span>
       </label>
       <button

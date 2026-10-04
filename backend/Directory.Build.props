@@ -1,0 +1,6 @@
+<Project>
+  <!-- Projects target net6.0; let them run on a newer installed .NET runtime (8, 9, …) if 6 isn't present. -->
+  <PropertyGroup>
+    <RollForward>Major</RollForward>
+  </PropertyGroup>
+</Project>

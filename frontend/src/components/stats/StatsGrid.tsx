@@ -2,7 +2,9 @@ import type { InstrumentStats } from '../../types/api'
 import { StatTile, StatTileSkeleton } from './StatTile'
 import { STATS } from './statDefinitions'
 
-const GRID = 'grid grid-cols-1 divide-y divide-hairline border border-hairline bg-surface sm:grid-cols-3 sm:divide-x sm:divide-y-0'
+// @container lets each tile size its value by the row's actual width, so values never collide.
+const GRID =
+  '@container grid grid-cols-1 divide-y divide-hairline border border-hairline bg-surface sm:grid-cols-3 sm:divide-x sm:divide-y-0'
 
 /** Single ticker: one large tile per stat. */
 export function StatsGrid({ stats }: { stats: InstrumentStats }) {
