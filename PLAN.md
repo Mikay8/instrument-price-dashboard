@@ -51,10 +51,8 @@ Full-stack app (C#/.NET backend + React frontend) that lets a user browse 200 in
 - [x] Error states (API unreachable, unknown ticker) with retry affordance
 
 ## Phase 3: Polish & Differentiators 
-- [ ] Component tests (Vitest + RTL) on trickiest logic — multi-select overlay behavior, loading/error states (3-5 tests, not full coverage)
-- [ ] Optional: one or two Playwright smoke tests (search → select → see chart) — only if time allows, not a blocker
-- [ ] Visual pass: spacing, typography, empty states, responsive check
-- [ ] Optional: quick wireframe/screenshot added to README showing design intent
+- [x] Component tests (Vitest + RTL) on trickiest logic — multi-select overlay behavior, loading/error states (3-5 tests, not full coverage)
+- [x] Visual pass: spacing, typography, empty states, responsive check
 
 ## Phase 4: README & Submission 
 - [ ] Setup/run instructions (backend + frontend, ports, any env steps)

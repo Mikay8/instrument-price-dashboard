@@ -6,6 +6,8 @@ import type { InstrumentStats } from '../../types/api'
 export interface StatDefinition {
   id: string
   label: ReactNode
+  /** Used where space is tight (the comparison table on phones). */
+  shortLabel: ReactNode
   caption: string
   value: (stats: InstrumentStats) => string
   /** Text color class for the value. */
@@ -17,6 +19,7 @@ export const STATS: readonly StatDefinition[] = [
   {
     id: 'return',
     label: 'Total return',
+    shortLabel: 'Return',
     caption: '(last ÷ first − 1) × 100',
     value: (s) => formatPercent(s.totalReturnPercent, { signed: true }),
     tone: (s) => toneClass(s.totalReturnPercent),
@@ -29,6 +32,11 @@ export const STATS: readonly StatDefinition[] = [
         Daily vol <span className="normal-case">σ</span>
       </>
     ),
+    shortLabel: (
+      <>
+        Vol <span className="normal-case">σ</span>
+      </>
+    ),
     caption: 'Stdev of daily returns',
     value: (s) => formatPercent(s.dailyVolatilityPercent),
     tone: () => 'text-ink',
@@ -36,6 +44,7 @@ export const STATS: readonly StatDefinition[] = [
   {
     id: 'drawdown',
     label: 'Max drawdown',
+    shortLabel: 'Max DD',
     caption: 'Peak → trough',
     value: (s) => formatPercent(s.maxDrawdownPercent, { signed: true }),
     tone: (s) => toneClass(s.maxDrawdownPercent),
