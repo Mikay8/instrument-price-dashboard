@@ -23,32 +23,32 @@ Full-stack app (C#/.NET backend + React frontend) that lets a user browse 200 in
 - [x] Set up CORS on backend so local frontend can call it
 
 ## Phase 1: Backend (C#)
-- [ ] Load CSV into memory on startup (simple in-memory store/dictionary keyed by ticker)
-- [ ] Implement `/api/instruments`
-- [ ] Implement `/api/prices/{ticker}` with 404 handling for unknown ticker
+- [x] Load CSV into memory on startup (simple in-memory store/dictionary keyed by ticker)
+- [x] Implement `/api/instruments`
+- [x] Implement `/api/prices/{ticker}` with 404 handling for unknown ticker
 - [ ] Implement stats calculations — **verify math by hand**
   - Total return % = (last price / first price − 1) × 100
   - Daily volatility = stdev of **daily returns** (day-over-day % change), not stdev of raw prices
   - Max drawdown = largest peak-to-trough decline (running max vs. current price), not just max − min
-- [ ] Unit tests (xUnit) on the three stats calculations — this is the correctness-critical part
-- [ ] Input validation on `{ticker}` route param (reject malformed/empty input cleanly)
-- [ ] **Perf:** compute stats once at CSV load (or memoize per-ticker on first request) — don't recalculate stdev/drawdown on every `/stats` call.
-- [ ] **Perf:** don't make `/prices/{ticker}` and `/prices/{ticker}/stats` each re-walk the full series independently if avoidable — share the loaded series.
+- [x] Unit tests (xUnit) on the three stats calculations — this is the correctness-critical part
+- [x] Input validation on `{ticker}` route param (reject malformed/empty input cleanly)
+- [x] **Perf:** compute stats once at CSV load (or memoize per-ticker on first request) — don't recalculate stdev/drawdown on every `/stats` call.
+- [x] **Perf:** don't make `/prices/{ticker}` and `/prices/{ticker}/stats` each re-walk the full series independently if avoidable — share the loaded series.
 
 ## Phase 2: Frontend Core 
-- [ ] Ticker list/search view — search-as-you-type, no fuzzy matching needed
-  - [ ] Virtualize the list (react-window or similar) — 200 items, show perf awareness
-  - [ ] Debounce the search input
-  - [ ] Fetch the 200-ticker list once, filter client-side on search (don't re-query backend per keystroke)
-- [ ] Ticker selection → fetch + render price line chart
-  - [ ] `useMemo` on chart data transforms so ticker switches don't reprocess unchanged data
-  - [ ] `AbortController` to cancel in-flight requests when the user picks a new ticker before the prior one resolves (prevents stale-response race conditions)
-  - [ ] Lazy-load the charting library if it's heavy, so it doesn't block initial render
-- [ ] Display computed stats alongside chart
-- [ ] Multi-select 2-3 tickers → overlay on single chart
-  - [ ] Distinguishable colors + legend
-- [ ] Loading states (skeletons, not bare spinners)
-- [ ] Error states (API unreachable, unknown ticker) with retry affordance
+- [x] Ticker list/search view — search-as-you-type, no fuzzy matching needed
+  - [x] Virtualize the list (react-window or similar) — 200 items, show perf awareness
+  - [x] Debounce the search input
+  - [x] Fetch the 200-ticker list once, filter client-side on search (don't re-query backend per keystroke)
+- [x] Ticker selection → fetch + render price line chart
+  - [x] `useMemo` on chart data transforms so ticker switches don't reprocess unchanged data
+  - [x] `AbortController` to cancel in-flight requests when the user picks a new ticker before the prior one resolves (prevents stale-response race conditions)
+  - [x] Lazy-load the charting library if it's heavy, so it doesn't block initial render
+- [x] Display computed stats alongside chart
+- [x] Multi-select 2-3 tickers → overlay on single chart
+  - [x] Distinguishable colors + legend
+- [x] Loading states (skeletons, not bare spinners)
+- [x] Error states (API unreachable, unknown ticker) with retry affordance
 
 ## Phase 3: Polish & Differentiators 
 - [ ] Component tests (Vitest + RTL) on trickiest logic — multi-select overlay behavior, loading/error states (3-5 tests, not full coverage)

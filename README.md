@@ -9,7 +9,7 @@ A full-stack app for browsing 200 financial instruments, charting their 30-day p
 
 | Endpoint | Returns |
 | --- | --- |
-| `GET /api/instruments` | List of all 200 tickers |
+| `GET /api/instruments` | All 200 instruments, sorted by ticker: `[{ ticker, lastPrice, totalReturnPercent }]` |
 | `GET /api/prices/{ticker}` | Full 30-day price series (404 if the ticker is unknown) |
 | `GET /api/prices/{ticker}/stats` | Total return %, daily volatility, max drawdown |
 
