@@ -54,15 +54,15 @@ Full-stack app (C#/.NET backend + React frontend) that lets a user browse 200 in
 - [x] Component tests (Vitest + RTL) on trickiest logic — multi-select overlay behavior, loading/error states (3-5 tests, not full coverage)
 - [x] Visual pass: spacing, typography, empty states, responsive check
 
-## Phase 4: README & Submission 
-- [ ] Setup/run instructions (backend + frontend, ports, any env steps)
-- [ ] Design decisions section — written like a product decision log: what you chose and why, tradeoffs made
-- [ ] AI usage note — specific, not generic (what AI helped scaffold, what you reviewed/corrected by hand, e.g. catching an incorrect drawdown formula)
-- [ ] Security considerations (production) — brief: JWT for auth, RBAC if multi-user, rate limiting on stats endpoint — note this is out of scope for the local exercise but here's how you'd approach it
-- [ ] Scaling note — how this would change at real scale ( cache layer, pagination/streaming instead of loading all 200 series client-side, WebSocket/polling for live updates if prices were real-time)
-- [ ] Known limitations / what you'd do with more time
-- [ ] Clean `.gitignore` — no secrets/config committed
-- [ ] Final run-through on a clean clone to make sure it actually works end to end
+## Phase 4: README 
+- [x] Setup/run instructions (backend + frontend, ports, any env steps)
+- [x] Design decisions section — written like a product decision log: what you chose and why, tradeoffs made
+- [x] AI usage note — specific, not generic (what AI helped scaffold, what you reviewed/corrected by hand, e.g. catching an incorrect drawdown formula)
+- [x] Security considerations (production) — brief: JWT for auth, RBAC if multi-user, rate limiting on stats endpoint — note this is out of scope for the local exercise but here's how you'd approach it
+- [x] Scaling note — how this would change at real scale ( cache layer, pagination/streaming instead of loading all 200 series client-side, WebSocket/polling for live updates if prices were real-time)
+- [x] Known limitations / what you'd do with more time
+- [x] Clean `.gitignore` — no secrets/config committed
+- [x] Final run-through on a clean clone to make sure it actually works end to end
 
 ---
 
